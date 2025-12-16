@@ -6,20 +6,20 @@
 
     <groupId>com.xzavier0722.mc.plugin</groupId>
     <artifactId>SlimeGlue</artifactId>
-    <version>1.0.2-${git.commit.id.abbrev}</version>
+    <version>1.0.2-Folia</version>
     <packaging>jar</packaging>
 
     <name>SlimeGlue</name>
 
     <description>A Slimefun addon, target to improve the compatibility with other plugins</description>
     <properties>
-        <java.version>16</java.version>
+        <java.version>21</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
     <url>https://github.com/Xzavier0722/SlimeGlue</url>
 
     <build>
-        <finalName>${project.name}-exp-${git.commit.id.abbrev}</finalName>
+        <finalName>${project.name}-exp-Folia</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -70,8 +70,8 @@
 
     <repositories>
         <repository>
-            <id>spigotmc-repo</id>
-            <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots</url>
+            <id>menthamc</id>
+            <url>https://repo.menthamc.org/repository/maven-public/</url>
         </repository>
         <repository>
             <id>jitpack.io</id>
@@ -94,9 +94,9 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.spigotmc</groupId>
-            <artifactId>spigot-api</artifactId>
-            <version>1.19-R0.1-SNAPSHOT</version>
+            <groupId>me.earthme.luminol</groupId>
+            <artifactId>luminol-api</artifactId>
+            <version>1.21.8-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -141,12 +141,6 @@
                     <artifactId>*</artifactId>
                 </exclusion>
             </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>com.github.Soldier233</groupId>
-            <artifactId>LockettePro</artifactId>
-            <version>5505be4</version>
-            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.github.Xzavier0722</groupId>

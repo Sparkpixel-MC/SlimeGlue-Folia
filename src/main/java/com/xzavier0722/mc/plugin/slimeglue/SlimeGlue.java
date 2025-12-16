@@ -8,13 +8,13 @@ import com.xzavier0722.mc.plugin.slimeglue.listener.SlimefunListener;
 import com.xzavier0722.mc.plugin.slimeglue.manager.CompatibilityModuleManager;
 import com.xzavier0722.mc.plugin.slimeglue.module.KingdomsXModule;
 import com.xzavier0722.mc.plugin.slimeglue.module.QuickShopHikariModule;
-import com.xzavier0722.mc.plugin.slimeglue.module.LocketteProModule;
 import com.xzavier0722.mc.plugin.slimeglue.module.MagicModule;
 import com.xzavier0722.mc.plugin.slimeglue.module.QuickShopModule;
 import com.xzavier0722.mc.plugin.slimeglue.slimefun.GlueProtectionModule;
 import io.github.thebusybiscuit.slimefun4.api.SlimefunAddon;
 import io.github.thebusybiscuit.slimefun4.implementation.Slimefun;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.protection.ProtectionManager;
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import javax.annotation.Nonnull;
@@ -50,7 +50,7 @@ public final class SlimeGlue extends JavaPlugin implements SlimefunAddon {
         if (!registerSfProtectionModule()) {
             logger.w("- Failed to register protection module, schedule the retry task after the server started.");
             AtomicInteger counter = new AtomicInteger();
-            getServer().getScheduler().runTaskTimer(this, task -> {
+            Bukkit.getGlobalRegionScheduler().runAtFixedRate(this, task -> {
                 if (registerSfProtectionModule()) {
                     logger.i("Protection module is registered!");
                     task.cancel();
@@ -100,7 +100,6 @@ public final class SlimeGlue extends JavaPlugin implements SlimefunAddon {
         moduleManager().register(new MagicModule());
         moduleManager().register(new QuickShopModule());
         moduleManager().register(new QuickShopHikariModule());
-        moduleManager().register(new LocketteProModule());
     }
 
     private boolean registerSfProtectionModule() {
