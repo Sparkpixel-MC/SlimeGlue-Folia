@@ -7,10 +7,10 @@ import com.xzavier0722.mc.plugin.slimeglue.api.listener.SubscriptionType;
 import com.xzavier0722.mc.plugin.slimeglue.api.protection.IProtectionHandler;
 import org.bukkit.plugin.Plugin;
 
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class CompatibilityModuleManager {
 
@@ -18,8 +18,10 @@ public class CompatibilityModuleManager {
     private final Map<String, ACompatibilityModule> enabledModules;
 
     public CompatibilityModuleManager() {
-        disabledModules = new HashMap<>();
-        enabledModules = new HashMap<>();
+        // Read from region threads (protection/event checks) while the global
+        // thread may load/unload modules, so both maps must be thread-safe.
+        disabledModules = new ConcurrentHashMap<>();
+        enabledModules = new ConcurrentHashMap<>();
     }
 
     public void register(ACompatibilityModule module) {
@@ -84,6 +86,23 @@ public class CompatibilityModuleManager {
             e.printStackTrace();
         }
         return false;
+    }
+
+    /**
+     * Disable every enabled module, releasing resources held by them.
+     * Called from {@code onDisable}.
+     */
+    public void disableAll() {
+        enabledModules.values().forEach(module -> {
+            try {
+                module.disable();
+            } catch (Throwable e) {
+                SlimeGlue.logger().e("Exception thrown while disabling the compatibility module for "
+                        + module.getCompatibilityPluginName());
+                e.printStackTrace();
+            }
+        });
+        enabledModules.clear();
     }
 
 }

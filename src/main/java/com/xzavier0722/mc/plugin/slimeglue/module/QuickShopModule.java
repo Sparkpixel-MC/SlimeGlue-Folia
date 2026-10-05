@@ -9,15 +9,16 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.plugin.Plugin;
 import org.maxgamer.quickshop.api.QuickShopAPI;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Optional;
 import java.util.UUID;
 
 public class QuickShopModule extends ACompatibilityModule {
-    private static Object shopAPI = null;
-    private static Method qsMethod = null;
+    // Written from the global thread on enable/disable, read from region threads.
+    private static volatile Object shopAPI = null;
+    private static volatile Method qsMethod = null;
 
     public QuickShopModule() {
         addProtectionHandler(new IBlockProtectionHandler() {
@@ -43,7 +44,7 @@ public class QuickShopModule extends ACompatibilityModule {
         });
     }
 
-    private UUID getQuickshopOwner(@Nonnull Location l) {
+    private UUID getQuickshopOwner(@NotNull Location l) {
         var qsPlugin = Bukkit.getPluginManager().getPlugin("QuickShop");
 
         if (qsPlugin == null) {
@@ -64,7 +65,7 @@ public class QuickShopModule extends ACompatibilityModule {
         }
     }
 
-    private boolean isQuickshop(@Nonnull Location l) {
+    private boolean isQuickshop(@NotNull Location l) {
         var qsPlugin = Bukkit.getPluginManager().getPlugin("QuickShop");
 
         if (qsPlugin == null) {

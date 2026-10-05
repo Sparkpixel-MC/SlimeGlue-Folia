@@ -8,7 +8,7 @@ import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.plugin.Plugin;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.UUID;
 
 public class QuickShopHikariModule extends ACompatibilityModule {
@@ -37,7 +37,7 @@ public class QuickShopHikariModule extends ACompatibilityModule {
         });
     }
 
-    private UUID getQuickshopOwner(@Nonnull Location l) {
+    private UUID getQuickshopOwner(@NotNull Location l) {
         Shop shop = QuickShopAPI.getInstance().getShopManager().getShop(l);
         if (shop != null) {
             return shop.getOwner().getUniqueId();
@@ -46,7 +46,7 @@ public class QuickShopHikariModule extends ACompatibilityModule {
 
     }
 
-    private boolean isQuickshop(@Nonnull Location l) {
+    private boolean isQuickshop(@NotNull Location l) {
         return QuickShopAPI.getInstance().getShopManager().getShop(l) != null;
 
     }

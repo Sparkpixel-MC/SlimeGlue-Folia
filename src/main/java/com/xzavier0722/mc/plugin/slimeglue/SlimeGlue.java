@@ -11,13 +11,14 @@ import com.xzavier0722.mc.plugin.slimeglue.module.QuickShopHikariModule;
 import com.xzavier0722.mc.plugin.slimeglue.module.LocketteProModule;
 import com.xzavier0722.mc.plugin.slimeglue.module.MagicModule;
 import com.xzavier0722.mc.plugin.slimeglue.module.QuickShopModule;
+import com.xzavier0722.mc.plugin.slimeglue.scheduler.SchedulerUtil;
 import com.xzavier0722.mc.plugin.slimeglue.slimefun.GlueProtectionModule;
 import io.github.thebusybiscuit.slimefun4.api.SlimefunAddon;
 import io.github.thebusybiscuit.slimefun4.implementation.Slimefun;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.protection.ProtectionManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public final class SlimeGlue extends JavaPlugin implements SlimefunAddon {
@@ -25,6 +26,7 @@ public final class SlimeGlue extends JavaPlugin implements SlimefunAddon {
     private static SlimeGlue instance;
     private static GlueLogger logger;
     private static CompatibilityModuleManager moduleManager;
+    private SchedulerUtil.TaskHandle protectionRetryTask;
 
     @Override
     public void onEnable() {
@@ -50,15 +52,15 @@ public final class SlimeGlue extends JavaPlugin implements SlimefunAddon {
         if (!registerSfProtectionModule()) {
             logger.w("- Failed to register protection module, schedule the retry task after the server started.");
             AtomicInteger counter = new AtomicInteger();
-            getServer().getScheduler().runTaskTimer(this, task -> {
+            protectionRetryTask = SchedulerUtil.runGlobalTimer(this, () -> {
                 if (registerSfProtectionModule()) {
                     logger.i("Protection module is registered!");
-                    task.cancel();
+                    cancelProtectionRetryTask();
                     return;
                 }
                 if (counter.getAndIncrement() >= 10) {
                     logger.e("Failed to register the slimefun protection module, some function may not work properly");
-                    task.cancel();
+                    cancelProtectionRetryTask();
                 }
             }, 1, 20);
         }
@@ -69,10 +71,20 @@ public final class SlimeGlue extends JavaPlugin implements SlimefunAddon {
 
     @Override
     public void onDisable() {
-        // Plugin shutdown logic
+        cancelProtectionRetryTask();
+        if (moduleManager != null) {
+            moduleManager.disableAll();
+        }
     }
 
-    @Nonnull
+    private void cancelProtectionRetryTask() {
+        if (protectionRetryTask != null) {
+            protectionRetryTask.cancel();
+            protectionRetryTask = null;
+        }
+    }
+
+    @NotNull
     @Override
     public JavaPlugin getJavaPlugin() {
         return this;

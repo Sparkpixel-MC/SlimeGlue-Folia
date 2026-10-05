@@ -1,0 +1,11 @@
+[versions]
+foliaApi = "26.2.build.7-beta"
+slimefun4 = "2025.1.2"
+shadow = "9.6.1"
+
+[libraries]
+folia-api = { module = "dev.folia:folia-api", version.ref = "foliaApi" }
+slimefun4 = { module = "com.github.SlimefunGuguProject:Slimefun4", version.ref = "slimefun4" }
+
+[plugins]
+shadow = { id = "com.gradleup.shadow", version.ref = "shadow" }

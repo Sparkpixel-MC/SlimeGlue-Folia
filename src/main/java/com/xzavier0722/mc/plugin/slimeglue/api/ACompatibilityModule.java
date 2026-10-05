@@ -5,8 +5,8 @@ import com.xzavier0722.mc.plugin.slimeglue.api.listener.IListener;
 import com.xzavier0722.mc.plugin.slimeglue.api.protection.IProtectionHandler;
 import org.bukkit.plugin.Plugin;
 
-import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 public abstract class ACompatibilityModule  {
 
@@ -14,8 +14,10 @@ public abstract class ACompatibilityModule  {
     private final Set<IProtectionHandler> protectionHandlers;
 
     public ACompatibilityModule() {
-        listeners = new HashSet<>();
-        protectionHandlers = new HashSet<>();
+        // Handlers/listeners are invoked from region threads while modules can
+        // be enabled/disabled from the global thread, so keep them thread-safe.
+        listeners = ConcurrentHashMap.newKeySet();
+        protectionHandlers = ConcurrentHashMap.newKeySet();
     }
 
     public Set<IListener> getListeners() {

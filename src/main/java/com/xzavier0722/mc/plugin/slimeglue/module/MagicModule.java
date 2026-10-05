@@ -8,12 +8,13 @@ import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.plugin.Plugin;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.lang.reflect.Method;
 import java.util.Objects;
 
 public class MagicModule extends ACompatibilityModule {
-    private Method magicBlockDataMethod = null;
+    // Written from the global thread on enable/disable, read from region threads.
+    private volatile Method magicBlockDataMethod = null;
 
     public MagicModule() {
         addProtectionHandler(new IBlockProtectionHandler() {
@@ -42,7 +43,7 @@ public class MagicModule extends ACompatibilityModule {
         }
     }
 
-    private boolean isMagicBlock(@Nonnull Location location) {
+    private boolean isMagicBlock(@NotNull Location location) {
         try {
             var blockData = magicBlockDataMethod.invoke(null, location);
             verbose("isMagicBlock: " + blockData);
