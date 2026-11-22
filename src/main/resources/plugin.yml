@@ -1,7 +1,7 @@
 name: SlimeGlue
 version: '${version}'
 main: com.xzavier0722.mc.plugin.slimeglue.SlimeGlue
-api-version: '26.2'
+api-version: '26.3'
 folia-supported: true
 depend: [ Slimefun ]
 softdepend:

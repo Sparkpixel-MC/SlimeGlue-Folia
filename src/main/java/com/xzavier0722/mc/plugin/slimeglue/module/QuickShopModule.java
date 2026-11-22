@@ -107,7 +107,8 @@ public class QuickShopModule extends ACompatibilityModule {
 
     @Override
     public void enable(Plugin plugin) throws Exception {
-        var version = plugin.getDescription().getVersion();
+        // Plugin#getDescription is deprecated since 26.3, use the plugin meta instead.
+        var version = plugin.getPluginMeta().getVersion();
         var splitVersion = version.split("-")[0].split("\\.");
 
         try {
